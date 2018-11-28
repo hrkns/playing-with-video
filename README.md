@@ -10,7 +10,8 @@ Instructions:
 
  - Make sure the `PATH` variable contains the repository folder route.
  - Open the console and place it in the folder where the videos are in.
- - Execute the command `converter`.
+ - Execute the command `converter` to convert a set of videos of the folder to another format.
+ - Execute the command `merge` to place all the videos of the folder in one.
 
 ## Notes:##
 

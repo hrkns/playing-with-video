@@ -1,1 +1,1 @@
-python "C:\Users\José\converter.py"
+python %~dp0%converter.py

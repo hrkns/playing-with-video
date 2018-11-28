@@ -57,7 +57,8 @@ for file in onlyfiles:
 		call(["ffmpeg", "-i", ""+file+"", "-q:v", factor, str(counter) + ext])
 
 	counter = counter + 1
-
+"""
 while True:
 	winsound.PlaySound("done.mp3", winsound.SND_ASYNC | winsound.SND_ALIAS )
 	time.sleep(0.5)
+"""
