@@ -18,3 +18,4 @@ Instructions:
  - It only converts videos with the next extensions: `mp4, avi, wmv, mkv, mpg`. If you want to add a new one, please add it in the method `has_ext`.
  - The variable `factor` indicates the quality of the resulting videos. Zero means the maximum quality, the greater the value the lesser quality the resulting videos will have.
  - The variable `ext` indicates the format of the resulting videos.
+ - This project should be joined with the project [concat-videos](https://github.com/hrkns/concat-videos) at some point.
