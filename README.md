@@ -13,7 +13,7 @@ Instructions:
  - Execute the command `converter` to convert a set of videos of the folder to another format.
  - Execute the command `merge` to place all the videos of the folder in one.
 
-## Notes:##
+## Notes:
 
  - It only converts videos with the next extensions: `mp4, avi, wmv, mkv, mpg`. If you want to add a new one, please add it in the method `has_ext`.
  - The variable `factor` indicates the quality of the resulting videos. Zero means the maximum quality, the greater the value the lesser quality the resulting videos will have.
