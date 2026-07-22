@@ -1,1 +1,2 @@
-python %~dp0%converter.py
+@echo off
+python "%~dp0converter.py" %*

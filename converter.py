@@ -1,64 +1,72 @@
-import time
-import winsound
-from os import listdir
-from os.path import isfile, join
-mypath = "./"
-
-def find_str(s, char):
-  index = 0
-  if char in s:
-    c = char[0]
-    for ch in s:
-      if ch == c:
-        if s[index:index+len(char)] == char:
-          return index
-      index += 1
-  return -1
-
-def has_ext(f):
-	cond = False
-	cond = cond or find_str(f, ".mp4") == len(f) - 4
-	cond = cond or find_str(f, ".avi") == len(f) - 4
-	cond = cond or find_str(f, ".wmv") == len(f) - 4
-	cond = cond or find_str(f, ".mkv") == len(f) - 4
-	cond = cond or find_str(f, ".mpg") == len(f) - 4
-	return cond
-  
-onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f)) and has_ext(f)]
-
+import argparse
+from pathlib import Path
 from subprocess import call
-counter = 0
 
-for file in onlyfiles:
-	print ("******************************************************************")
-	print ("******************************************************************")
-	print ("******************************************************************")
-	print ("******************************************************************")
-	print ("******************************************************************")
-	print ("###FILE #" + str(counter))
-	ext = ".mp4"
-	newname = file[:len(file)-4]+ext;
-	factor = str(0)
+VIDEO_EXTENSIONS = {".mp4", ".avi", ".wmv", ".mkv", ".mpg"}
 
-	if not isfile(join(mypath, newname)):
-		call(["ffmpeg", "-i", ""+file+"", "-q:v", factor, newname])
-	else:
-		append = ''
 
-		if (counter < 10):
-			append = '0'
+def has_valid_input_ext(file_path: Path) -> bool:
+    return file_path.suffix.lower() in VIDEO_EXTENSIONS
 
-		while isfile(join(mypath, append + str(counter) + ext)):
-			counter = counter + 1
 
-			if counter >= 10:
-				append = ''
+def normalize_ext(ext: str) -> str:
+    return ext if ext.startswith(".") else f".{ext}"
 
-		call(["ffmpeg", "-i", ""+file+"", "-q:v", factor, str(counter) + ext])
 
-	counter = counter + 1
-"""
-while True:
-	winsound.PlaySound("done.mp3", winsound.SND_ASYNC | winsound.SND_ALIAS )
-	time.sleep(0.5)
-"""
+def main():
+    parser = argparse.ArgumentParser(
+        description="Convert video files in a folder to another extension using ffmpeg."
+    )
+    parser.add_argument(
+        "path",
+        help="Folder containing the input video files"
+    )
+    parser.add_argument(
+        "ext",
+        help="Target output extension, for example: .wmv or wmv"
+    )
+
+    args = parser.parse_args()
+
+    path = Path(args.path).resolve()
+    ext = normalize_ext(args.ext).lower()
+    factor = "0"
+
+    if not path.exists() or not path.is_dir():
+        raise SystemExit(f"Error: '{path}' is not a valid folder.")
+
+    onlyfiles = sorted(
+        [f for f in path.iterdir() if f.is_file() and has_valid_input_ext(f)]
+    )
+
+    counter = 0
+
+    for file in onlyfiles:
+        print("*" * 66)
+        print("*" * 66)
+        print("*" * 66)
+        print("*" * 66)
+        print("*" * 66)
+        print(f"### FILE #{counter}")
+
+        newname = file.stem + ext
+        target_path = path / newname
+
+        if not target_path.is_file():
+            call(["ffmpeg", "-i", str(file), "-q:v", factor, str(target_path)])
+        else:
+            append = "0" if counter < 10 else ""
+
+            while (path / f"{append}{counter}{ext}").is_file():
+                counter += 1
+                if counter >= 10:
+                    append = ""
+
+            target_path = path / f"{append}{counter}{ext}"
+            call(["ffmpeg", "-i", str(file), "-q:v", factor, str(target_path)])
+
+        counter += 1
+
+
+if __name__ == "__main__":
+    main()
